@@ -21,7 +21,7 @@ object Application extends Controller {
   	taskForm.bindFromRequest.fold(
   		errors => BadRequest(views.html.index(Task.all, errors)),
   		task => {
-  			Task.create(task.label, task.description)
+  			Task.create(task.label, task.description, task.assignee)
   			Redirect(routes.Application.tasks)
   		}
   	)
@@ -36,6 +36,7 @@ object Application extends Controller {
     mapping(
     	"id" -> ignored(123L),
 	"label" -> nonEmptyText,
-	"description" -> text
+	"description" -> text,
+	"assignee" -> text
   )(Task.apply)(Task.unapply))
 }
