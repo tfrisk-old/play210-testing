@@ -20,8 +20,8 @@ object Application extends Controller {
   def newTask = Action { implicit request =>
   	taskForm.bindFromRequest.fold(
   		errors => BadRequest(views.html.index(Task.all, errors)),
-  		label => {
-  			Task.create(label)
+  		task => {
+  			Task.create(task.label, task.description)
   			Redirect(routes.Application.tasks)
   		}
   	)
@@ -33,6 +33,9 @@ object Application extends Controller {
   }
 
   val taskForm = Form(
-	"label" -> nonEmptyText)
-
+    mapping(
+    	"id" -> ignored(123L),
+	"label" -> nonEmptyText,
+	"description" -> text
+  )(Task.apply)(Task.unapply))
 }
